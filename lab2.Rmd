@@ -1,0 +1,11 @@
+---
+title: "lab2"
+author: "Gavin Hyde"
+date: "2/16/2022"
+output: html_document
+---
+
+choco <- read.csv("https://ds202-at-isu.github.io/labs/data/choco.csv")
+head(choco)
+
+choco %>% ggplot(aes(x = as.factor(Review.Date))) + geom_bar()
