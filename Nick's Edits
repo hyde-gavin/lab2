@@ -1,0 +1,80 @@
+---
+title: "lab2"
+author: "Nick Preszler"
+date: "2/16/2022"
+output: html_document
+---
+```{r}
+library(dplyr)
+library(ggplot2)
+library(classdata)
+
+choco <- read.csv("https://ds202-at-isu.github.io/labs/data/choco.csv")
+head(choco)
+
+choco %>% ggplot(aes(x = as.factor(Review.Date))) + geom_bar()
+```
+
+Question Set I 
+
+1. What is the overall number of chocolate bars rated?
+1852 chocolate bars were rate, under the assumption each row represents an individual chocolate bar.
+```{r}
+nrow(choco)
+```
+
+2. How does the number of ratings depend on the year? Draw a bar chart of the number of reports.
+
+```{r}
+ggplot(data = choco, aes(x = Review.Date)) + 
+  geom_bar() +
+  scale_x_continuous(breaks = c(2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017))
+```
+Question Set II 
+
+1. How are ratings distributed? Draw a histogram of ratings and describe it. Don’t forget to mention outliers, if there are any.
+
+```{r}
+ggplot(data = choco, aes(x = Rating)) +
+  geom_histogram(bins=10)
+```
+
+It seems like most of the reviews are between 3 and 4, with the majority of those around 3.5., outliers are very few reviews at 1 and 5. 
+
+2. Do ratings depend on the cocoa percentage of a chocolate bar?
+
+```{r}
+ggplot(data = choco, aes(x = Rating, y = Cocoa.Pct)) +
+  geom_jitter()
+```
+
+There seems to be very correlation between the two. The range of normal seems to be around between 60% and 80% of cocoa, and a rating between 2.5 and 4. Anything outside of that seems to be an outlier, that's the heaviest correlation.
+
+3. How do ratings compare across different company locations? Focus on the three locations with the most ratings:
+```{r}
+choco1 <- dplyr::filter(choco, Company.Location %in% c("U.S.A.", "France", "Canada"))
+ggplot(data = choco1, aes(x = Rating)) +
+  facet_wrap(~Company.Location) +
+  geom_bar()
+```
+
+It appears that there is either more kinds of chocolate bars being produced from the U.S. or that more were reviwed for this, because there total overall is much higher. All three countries seem to have ratings centered pretty strongly between 3 and 4.
+
+Gavin's Question: Does the bean origin have any correlation to the rating? 
+```{r}
+choco2 <- dplyr::filter(choco, Company.Location %in% c("U.S.A."))
+ggplot(data = choco2, aes(x = Rating)) +
+  facet_wrap(~Broad.Bean.Origin) +
+  geom_bar()
+```
+
+  
+This graph shows that for the most part the rating and bean origin don't seem to related, as there are no countries of origin with heavy 1 or 5 star reviews, most are somewhere in the middle. It also shows that we get the majority of our beans from Belize, Bolivia, Dominican Republic, Ecuador, Madagascar, Peru, and Venezuela. Also, that we source from a lot of other countries, but make very little chocolate with it. 
+
+Nick's Question: Is there a relationship between the Review Date and the average Rating?
+```{r}
+ggplot(data = choco, aes(x=Rating)) + 
+  facet_wrap(~Review.Date) + 
+  geom_bar()
+```
+There does not appear to be a difference in the distribution of Ratings based on the year of the rating. There are varying quantities of ratings by year, but the distribution appears to be similar enough for each to not identify a relationship between the two.
